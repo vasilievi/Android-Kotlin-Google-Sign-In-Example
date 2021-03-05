@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "247758483603",
+    "project_id": "sign-in-bb587",
+    "storage_bucket": "sign-in-bb587.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247758483603:android:c0e96cc0467eb1316d1d66",
+        "android_client_info": {
+          "package_name": "google.sign.in"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "247758483603-b06kg0k9r1si01fjgbv761ajcbn460tj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4Uo3oilBubWaVPDG6Q84JeN4TsN14Rv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "247758483603-b06kg0k9r1si01fjgbv761ajcbn460tj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
