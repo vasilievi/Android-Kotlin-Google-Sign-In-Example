@@ -2,9 +2,13 @@ package google.sign.`in`
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -12,18 +16,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : AppCompatActivity() {
     private var RC_SIGN_IN=1
     lateinit var mGoogleSignInClient:GoogleSignInClient
+    lateinit var signInButton:SignInButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // Set the dimensions of the sign-in button.
-        val signInButton = findViewById<SignInButton>(R.id.sign_in_button)
+        signInButton = findViewById<SignInButton>(R.id.sign_in_button)
         signInButton.setSize(SignInButton.SIZE_STANDARD)
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -38,7 +44,42 @@ class MainActivity : AppCompatActivity() {
         signInButton.setOnClickListener {
             signIn();
         }
-    };
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if(account!=null){
+            Toast.makeText(applicationContext, "Already signed in", Toast.LENGTH_SHORT).show()
+            signInButton.visibility = View.GONE
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.log_out -> {
+                signOut()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun signOut() {
+        mGoogleSignInClient.signOut().addOnCompleteListener {
+            Toast.makeText(applicationContext, "Signed out successfully", Toast.LENGTH_SHORT).show()
+            signInButton.visibility = View.VISIBLE
+        }
+    }
 
     private fun signIn() {
         val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
@@ -62,22 +103,13 @@ class MainActivity : AppCompatActivity() {
             val account = completedTask.getResult(ApiException::class.java)
             // Signed in successfully, show authenticated UI.
             Toast.makeText(applicationContext, "Signed in successfully", Toast.LENGTH_SHORT).show()
+            signInButton.visibility = View.GONE
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Toast.makeText(applicationContext, "Sign fail", Toast.LENGTH_SHORT).show()
 
         }
-    }
-
-
-
-
-    override fun onStart() {
-        super.onStart()
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        val account = GoogleSignIn.getLastSignedInAccount(this)
     }
 
 }
